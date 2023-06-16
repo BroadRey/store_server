@@ -161,3 +161,8 @@ cython_debug/
 
 # macOS stuff:
 .DS_Store
+
+# Practice stuff:
+fixtures/
+media/
+static/
