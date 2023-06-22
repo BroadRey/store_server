@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from users.forms import UserLoginForm, UserRegistrationForm
+from users.forms import UserLoginForm, UserProfileForm, UserRegistrationForm
 
 
 def login(request: HttpRequest) -> HttpResponse:
@@ -35,7 +35,7 @@ def registration(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('users:login'))
-        
+
         print(form.errors)
 
     else:
@@ -46,3 +46,25 @@ def registration(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, 'users/registration.html', context)
+
+
+def profile(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        form = UserProfileForm(
+            instance=request.user,
+            data=request.POST,
+            files=request.FILES
+        )
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('users:profile'))
+    else:
+        form = UserProfileForm(instance=request.user)
+
+    context = {
+        'form': form,
+        'title': 'Store - Профиль',
+    }
+
+    return render(request, 'users/profile.html', context)
